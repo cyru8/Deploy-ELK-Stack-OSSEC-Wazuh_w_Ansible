@@ -1,0 +1,57 @@
+---
+# tasks file for logstash
+- name: install the Logstash Version 6.5.2 rpm
+  yum:
+    name: https://artifacts.elastic.co/downloads/logstash/logstash-6.5.2.rpm
+    state: present
+
+- name: Download the Wazuh config file for a single-host architecture for Logstash
+  get_url:
+    url: https://raw.githubusercontent.com/wazuh/wazuh/2.0/extensions/logstash/01-wazuh.conf
+    dest: /etc/logstash/conf.d/01-wazuh.conf
+    #checksum: 'sha256:http://example.com/path/sha256sum.txt'
+
+- name: Copy wazuh-elastic6-template-alerts.json.js" to /etc/logstash/wazuh-elastic6-template.json
+  copy:
+    src: wazuh-elastic6-template-alerts.json.j2
+    dest: /etc/logstash/wazuh-elastic6-template.json
+    mode: 0644
+
+- name: Copy logstash.conf to /etc/logstash/conf.d/logstash.conf
+  copy:
+    src: logstash.conf
+    dest: /etc/logstash/conf.d/logstash.conf
+    mode: 0644
+
+#- name: download geolite database
+#  get_url:
+#    url: http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+#    dest: /etc/logstash/GeoLiteCity.dat.gz
+#    mode: 0440
+
+- name: download and copy geolite database
+  copy:
+    src: GeoLiteCity.dat
+    dest: /etc/logstash/
+  become: true
+
+- name: Add the user 'logstash'to the group 'ossec'
+  user:
+    name: logstash
+    group: ossec
+
+- name: Enable service logstash
+  service:
+    name: logstash
+    enabled: yes
+  become: true
+
+- name: start logstash
+  service:
+    name: logstash
+    state: started
+    enabled: yes
+  become: true
+
+#force all handlers to run - so all db updates will take effect  
+- meta: flush_handlers

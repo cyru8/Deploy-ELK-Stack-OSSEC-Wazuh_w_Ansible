@@ -1,0 +1,4 @@
+---
+# vars file for php
+vars:
+  env: development # or any value other than 'production'

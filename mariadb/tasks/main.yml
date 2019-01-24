@@ -1,0 +1,70 @@
+---
+#@See http://www.wiivil.com/installing-mysql-on-centos-7-server-using-ansible/ ## For MySql Installation **** Important
+# tasks file for mariadb
+- name: install mariadb-libs
+  yum:
+    name: mariadb-libs
+    state: present
+  become: true
+
+- name: install mariadb    
+  yum:
+    name: mariadb
+    state: present
+  become: true
+
+- name: mariadb-server
+  yum:
+    name: mariadb-server
+    state: present
+  become: true
+
+- name: Install MySQL-python, this is required for the task remove anonymous user
+  yum:
+    name: MySQL-python
+    state: present
+  become: true
+
+- name: Download MySQL Community Repo
+  get_url:
+    url: http://repo.mysql.com/mysql-community-release-el7-7.noarch.rpm
+    dest: /tmp
+
+- name: Install MySQL Community Repo
+  yum: 
+    name: /tmp/mysql-community-release-el7-7.noarch.rpm
+    state: present
+  become: true
+
+- name: upgrade all packages, excluding kernel & foo related packages
+  yum:
+    name: '*'
+    state: latest
+    exclude: kernel*,foo*
+
+- name: Install MySQL Server
+  yum: 
+    name: mysql-server 
+    state: present
+  become: true
+
+- name: Start MySQL Server and enable it
+  service: 
+    name: mysqld 
+    state: started 
+    enabled: yes
+  become: true
+
+  notify:
+    - restart mysqld
+    - Change root user password on first run
+    - Create .my.cnf file with root password credentials
+    - Removes all anonymous user accounts
+    - Remove mariadb test db
+    - Create database for wordpress
+    - Create database user with name 'testuser' and password 'password' with all database privileges
+    - restart mysqld
+
+#force all handlers to run - so all db updates will take effect  
+- meta: flush_handlers
+...

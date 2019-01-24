@@ -1,0 +1,9 @@
+---
+# vars file for firewalld
+nginx_ssh_port: 22
+nginx_http_port: 80
+nginx_https_port: 443
+elasticsearch_port: 9200
+kibana_port: 5601
+wazuh_port: 1514
+logstash_port: 5044

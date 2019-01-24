@@ -1,0 +1,22 @@
+# currently installed to /etc/systemd/system/wp_mariadb_config.service
+
+[Unit]
+Description=Intial Mariadb Wordpress Configurator
+
+#Specify the service that this unit must be executed after and that it requires
+After=mariadb.service
+Requires=mariadb.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+
+#Specify the full path to the executable and script you wish to execute
+ExecStart=/usr/bin/bash -c /root/wp_mariadb_config.sh
+
+#Specify the full path to the working directory of your script
+WorkingDirectory=/root
+
+[Install]
+#Specify the target that will execute this unit
+WantedBy=multi-user.target

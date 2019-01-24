@@ -1,0 +1,99 @@
+---
+#@See https://github.com/Vinelab/ansible-php-fpm/blob/master/tasks/main.yml
+- name: download remi release repo for php
+  get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-6.rpm dest=/tmp/remi-release-6.rpm
+  tags: php-fpm
+
+- name: install remi repo
+  command: rpm -Uvh /tmp/remi-release-6.rpm
+  register: remi_repo_result
+  failed_when: "'conflict' in remi_repo_result.stderr"
+  tags: php-fpm
+
+- name: install php
+  yum:
+    name: php
+    state: present
+  become: true
+
+- name: install php-fpm
+  yum:
+    name: php-fpm
+    state: present
+  become: true
+
+- name: install php-mbstring
+  yum:
+    name: php-mbstring
+    state: present
+  become: true
+
+- name: install php-mcrypt
+  yum:
+    name: php-mcrypt
+    state: present
+  become: true
+
+- name: install php-pdo
+  yum:
+    name: php-pdo
+    state: present
+  become: true
+
+- name: install php-mysql
+  yum:
+    name: php-mysql
+    state: present
+  become: true
+
+- name: install php-xml
+  yum:
+    name: php-xml
+    state: present
+  become: true
+
+- name: php-gd
+  yum:
+    name: php-gd
+    state: present
+  become: true
+
+- name: firewalld
+  yum:
+    name: firewalld
+    state: present
+  become: true
+
+- name: backup default php configuration
+  shell: /bin/cp /etc/php.ini /etc/php.default.ini creates=/etc/php.default.ini
+  tags: php-fpm
+
+- name: Copy php.ini to remote webserver
+  copy:
+    src: php.ini
+    dest: /etc/php.ini
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Copy php.ini to remote webserver
+  copy:
+    src: www.conf
+    dest: /etc/php-fpm.d/www.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name : start and enable php-fpm service
+  service: name=php-fpm enabled=yes
+- service: name=php-fpm state=started
+
+- name: start php-fpm
+  service: name=php-fpm state=started enabled=yes
+  tags: php-fpm
+
+#force all handlers to run  
+- meta: flush_handlers
+

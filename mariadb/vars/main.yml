@@ -1,0 +1,8 @@
+---
+# vars file for mariadb and MySql
+mysql_root_user: root
+mysql_root_passwd: password
+mysql_user: testuser
+mysql_user_passwd: password
+ansible_hostname: localhost
+wordpress_db: testdb

@@ -1,0 +1,33 @@
+#Reference: https://github.com/sadsfae/ansible-elk/blob/master/install/roles/curator/templates/curator-action.yml.j2
+actions:
+#Closes indicies after 5 days to save on RAM
+  1:
+    action: close
+    description: close indices
+    options:
+      delete_aliases: False
+      timeout_override:
+      continue_if_exception: True
+      disable_action: False
+    filters:
+    -
+      filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 2
+      exclude:
+#Deletes indicies after 2 days to clean up storage space.
+  2:
+    action: delete_indices
+    description: delete indices
+    filters:
+    -
+      filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 2
+      exclude:

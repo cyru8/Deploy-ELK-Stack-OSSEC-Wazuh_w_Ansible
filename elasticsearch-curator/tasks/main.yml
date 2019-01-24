@@ -1,0 +1,45 @@
+---
+# SEE https://github.com/sadsfae/ansible-elk/blob/master/install/roles/curator/tasks/main.yml
+# tasks file for elasticsearch-curator
+# install curator tool for managing elasticsearch
+
+- name: Import curator GPG Key
+  rpm_key: 
+    key: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  become: true
+
+- name: install the Elasticsearch-curator-5.6.0-1.x86_64.rpm 
+  yum: 
+    name: https://packages.elastic.co/curator/5/centos/7/Packages/elasticsearch-curator-5.6.0-1.x86_64.rpm 
+    state: present  
+
+- name: Setup curator config
+  template:
+    src: curator-config.yml.j2
+    dest: /etc/elasticsearch/curator-config.yml
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Setup curator template file
+  template:
+    src: curator-action.yml.j2
+    dest: /etc/elasticsearch/curator-action.yml
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+# Runs cron job to cleanup indices every weekday.
+# you should adjust this to prod environment needs
+- cron:
+    name: Curator run
+    weekday: '*'
+    minute: 0
+    hour: 23
+    user: root
+    job: "curator --config /etc/elasticsearch/curator-config.yml /etc/elasticsearch/curator-action.yml >> /var/log/curator.log 2>&1"
+    cron_file: curator-daily-cleanup
+  become: true

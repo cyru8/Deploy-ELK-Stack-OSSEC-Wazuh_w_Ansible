@@ -1,0 +1,15 @@
+---
+# handlers file for nginx
+# #@see https://github.com/William-Yeh/ansible-nginx/blob/master/handlers/main.yml
+- name: Enable service nginx
+  service:
+    name: nginx
+    enabled: yes
+  become: true
+
+- name: start nginx
+  service: 
+    name: nginx 
+    state: started
+    enabled: yes
+  become: true

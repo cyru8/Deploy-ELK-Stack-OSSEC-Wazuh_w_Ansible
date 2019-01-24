@@ -1,0 +1,5 @@
+---
+# defaults file for nginx
+#@see https://github.com/William-Yeh/ansible-nginx/blob/master/defaults/main.yml
+# variables needed to be defined in user's playbook
+

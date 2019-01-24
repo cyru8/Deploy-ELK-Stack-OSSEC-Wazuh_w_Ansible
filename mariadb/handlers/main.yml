@@ -1,0 +1,71 @@
+---
+# handlers file for mariadb
+#@See http://www.wiivil.com/installing-mysql-on-centos-7-server-using-ansible/
+- name: restart mysqld
+  service:
+    name: mysqld
+    state: restarted
+  become: true
+
+# Ansible mysql_secure_installation playbook
+- name: Change root user password on first run
+  mysql_user: 
+    name: root
+    host: localhost
+    password: "{{ mysql_root_passwd }}"
+    login_user: root
+    login_password: "{{ mysql_root_passwd }}"
+    check_implicit_admin: yes
+    priv: "*.*:ALL,GRANT"
+
+- name: Create .my.cnf file with root password credentials
+  copy: 
+    src: root.cnf.j2 
+    dest: /etc/mysql/my.cnf 
+    mode: 0600
+  become: true
+
+- name: Removes all anonymous user accounts
+  mysql_user:
+    name: ''
+    host: localhost
+    state: absent
+    login_user: root      # just addedd
+    login_password: password   ### just added
+
+- name: Remove mariadb test db
+  mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_passwd }}"
+
+- name: Create database for wordpress
+  mysql_user:
+    name: "{{ wordpress_db }}"
+    state: present
+    login_user: root
+    login_password: password
+
+- name: Create database user with name 'testuser' and password 'password' with all database privileges
+  mysql_user:
+    name: "{{ mysql_user }}"
+    host: localhost
+    password: "{{ mysql_user_passwd }}"
+    priv: '*.*:ALL'
+    state: present
+    login_user: root
+    login_password: password
+
+- name: Enable service mysqld/mariadb
+  service:
+    name: mysqld
+    enabled: yes
+  become: true
+
+- name: restart mysqld
+  service:
+    name: mysqld
+    state: restarted
+  become: true
+...

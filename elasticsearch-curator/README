@@ -1,0 +1,4 @@
+# @SEE https://github.com/sadsfae/ansible-elk/tree/master/install/roles/curator
+# @SEE https://github.com/sadsfae/ansible-elk/tree/master/install/roles
+# @SEE https://community.talend.com/t5/Architecture-Best-Practices-and/Deleting-old-indices-in-Elasticsearch-using-Curator/ta-p/124471
+# #@SEE http://www.madhur.co.in/blog/2017/04/09/usingcuratordeleteelasticindex.html

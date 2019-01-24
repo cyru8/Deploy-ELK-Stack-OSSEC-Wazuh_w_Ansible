@@ -1,0 +1,23 @@
+---
+#@See https://dotlayer.com/how-to-use-an-ansible-playbook-to-install-wordpress/     #### FULL GUIDE FOR LAMP
+- hosts: elk-server
+  become: yes
+#  vars:
+#    mariadb_priv_user: root
+#    mariadb_priv_user_passwd: password
+#    wordpress_db: MyNewDB
+#    wordpress_db_user: test
+#    wordpress_db_user_passwd: password
+  roles:
+     - srv-prep
+     - firewall
+     - ssl
+     - nginx
+     - mariadb
+     - php
+     - wazuh
+     - elasticsearch
+     - logstash
+     - kibana
+     - elasticsearch-curator
+...

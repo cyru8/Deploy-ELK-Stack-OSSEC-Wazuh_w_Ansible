@@ -1,0 +1,57 @@
+---
+# handlers file for kibana
+- name: start and enable service Kibana
+  service:
+    name: kibana
+    enabled: yes
+  become: true
+
+- name: start and enable firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  become: true
+
+- name: start and enable wazuh-api
+  service:
+    name: wazuh-api
+    state: started
+    enabled: yes
+  become: true
+
+- name: start and enable wazuh-manager
+  service:
+    name: wazuh-manager
+    state: started
+    enabled: yes
+  become: true
+
+- name: start and enable elasticsearch
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+  become: true
+
+- name: start and enable logstash
+  service:
+    name: logstash
+    state: started
+    enabled: yes
+  become: true
+
+- name: start and enable kibana
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+  become: true
+
+- name: start and enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: true
+

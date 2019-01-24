@@ -1,0 +1,39 @@
+---
+# tasks file for wazuh
+#- name: Download Java JRE
+#  get_url:
+#    url: https://mirror.its.sfu.ca/mirror/CentOS-Third-Party/NSG/common/x86_64/jre-8u60-linux-x64.rpm
+#    dest: /opt/jre-8u60-linux-x64.rpm
+#    headers: 'Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+
+#- name: install Java JRE rpm from a local file
+#  yum:
+#    name: /opt/jre-8u60-linux-x64.rpm
+#    state: present
+
+- name: Download Java JDK
+  get_url:
+    url: https://mirror.its.sfu.ca/mirror/CentOS-Third-Party/NSG/common/x86_64/jdk-8u60-linux-x64.rpm
+    dest: /opt/jdk-8u60-linux-x64.rpm
+    headers: 'Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+ 
+- name: Install Java JDK rpm from a local file
+  yum:
+    name: /opt/jdk-8u60-linux-x64.rpm
+    state: present
+
+- name: install the Wazuh-manager version 3.7.2 rpm
+  yum:
+    name: https://packages.wazuh.com/3.x/yum/wazuh-manager-3.7.2-1.x86_64.rpm
+    state: present
+
+- name: install the nodejs Version 6.14.3
+  yum:
+    name: http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/n/nodejs-6.14.3-1.el7.x86_64.rpm
+    state: present
+
+- name: install the Wazuh-api Version 3.7.2 rpm
+  yum:
+    name: https://packages.wazuh.com/3.x/yum/wazuh-api-3.7.2-1.x86_64.rpm
+    state: present
+

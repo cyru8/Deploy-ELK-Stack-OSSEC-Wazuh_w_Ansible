@@ -1,0 +1,92 @@
+---
+# tasks file for logstash
+#See @ https://github.com/wazuh/wazuh-ansible/blob/master/roles/elastic-stack/ansible-kibana/defaults/main.yml
+#
+- name: install the Kibana Version 6.5.2 rpm
+  yum:
+    name: https://artifacts.elastic.co/downloads/kibana/kibana-6.5.2-x86_64.rpm
+    state: present
+
+- name: install the python-passlib-1.6.2-2.el7.noarch.rpm
+  yum:
+    name: http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/p/python-passlib-1.6.2-2.el7.noarch.rpm
+    state: present
+
+- name: Install Wazuh-APP (can take a while)
+  shell: "/usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/wazuhapp/wazuhapp-3.7.1_6.5.2.zip"
+  environment:
+    NODE_OPTIONS: "--max-old-space-size=3072"
+  args:
+    creates: /usr/share/kibana/plugins/wazuh/package.json
+  notify: restart kibana
+
+#- name: Copy techpro.int to /etc/nginx/conf.d/
+#  copy:
+#    src: techpro.int
+#    dest: /etc/nginx/conf.d/
+#  become: true
+
+- name: Copy kibana.yml to /etc/kibana/
+  copy:
+    src: kibana.yml
+    dest: /etc/kibana/
+  become: true
+
+- name: Add kibana admin user 'kibanaadmin' with a for the password file
+  user:
+    name: kibanaadmin
+    comment: Kibana Admin
+    group: root
+
+# touch a kibana password file
+- file:
+    path: /etc/nginx/conf.d/kibana.htpasswd
+    state: touch
+    mode: "u=rw,g=r,o=r"
+
+# Add a user to a password (Password!23) file and ensure permissions are set
+- htpasswd:
+    path: /etc/nginx/conf.d/kibana.htpasswd
+    name: kibanaadmin
+    password: 'Password!23'
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Set up basic auth credentials file to access kibana
+#  htpasswd:
+#    create: yes
+#    crypt_scheme: apr_md5_crypt
+#    name: "kibanaadmin"
+#    password: "Password!23"
+#    path: "/etc/nginx/conf.d/kibana.htpasswd"
+#    state: present
+
+#- name: Add the user 'logstash'to the group 'ossec'
+#  user:
+#    name: logstash
+#    group: ossec
+
+# Add a user to (Password!23) file to allow login to wazuh api
+- htpasswd:
+    path: /var/ossec/api/configuration/auth/user
+    name: kibanaadmin
+    password: 'Password!23'
+    mode: 0644
+
+- name: Enable service Kibana
+  service:
+    name: kibana
+    enabled: yes
+  become: true
+
+- name: start kibana
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+  become: true
+
+#force all handlers to run - so all db updates will take effect  
+- meta: flush_handlers
+

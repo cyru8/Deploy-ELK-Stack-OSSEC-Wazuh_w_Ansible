@@ -1,0 +1,87 @@
+---
+# tasks file for elasticsearch
+# #@See https://documentation.wazuh.com/current/installation-guide/installing-elastic-stack/elastic_server_rpm.html
+- name: install the Elasticsearch Version 6.5.2 rpm
+  yum:
+    name: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.2.rpm
+    state: present
+
+- name: Enable service elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+  become: true
+
+- name: Update elasticsearch.yml in /etc/elasticsearch/elasticsearch.yml
+  copy:
+    src: elasticsearch.yml
+    dest: /etc/elasticsearch/
+    mode: 0660
+
+#- name: Update elasticsearch.service in /etc/systemd/system/multi-user.target.wants/
+#  copy:
+#    src: elasticsearch.service
+#    dest: /etc/systemd/system/multi-user.target.wants/
+#    mode: 0777
+
+- name: Update elasticsearch in /etc/sysconfig/elasticsearch
+  copy:
+    src: elasticsearch
+    dest: /etc/sysconfig/
+    mode: 0660
+
+- name: Update jvm.options in /etc/elasticsearch/jvm.options
+  copy:
+    src: jvm.options
+    dest: /etc/elasticsearch/
+    mode: 0660
+
+- name: Enable service elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+  become: true
+
+- name: start elasticsearch
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+  become: true
+
+- name: Check for Wazuh Alerts template
+  uri:
+    url: https://raw.githubusercontent.com/wazuh/wazuh/3.7/extensions/elasticsearch/wazuh-elastic6-template-alerts.json
+    method: GET
+
+- name: Installing Wazuh Alerts template
+  uri:
+    url: http://192.168.2.20:9200/_template/wazuh"
+    method: PUT
+    body_format: json
+    body_format: json
+    body: "{{ lookup('template','wazuh-elastic6-template-alerts.json.j2') }}"
+    when: wazuh_alerts_template_exits.status != 200
+
+#- name: wazuh-elastic6-template-alerts.json.js" to /etc/logstash/wazuh-elastic6-template.json
+#  copy:
+#    src: wazuh-elastic6-template-alerts.json.j2
+#    dest: /etc/logstash/wazuh-elastic6-template.json
+#    mode: 0644
+
+- name: Enable service elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+  become: true
+
+- name: start elasticsearch
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+  become: true
+
+#force all handlers to run - so all db updates will take effect  
+- meta: flush_handlers
+

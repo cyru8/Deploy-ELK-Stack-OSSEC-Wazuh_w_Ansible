@@ -1,0 +1,21 @@
+---
+# handlers file for firewalld
+- name: restart firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  become: true
+
+- name: Enable firewalld service.
+  service:
+    name: firewalld
+    enabled: yes
+  become: true
+
+- name: restart firewalld
+  service:
+    name: firewalld
+    state: restarted
+    enabled: yes
+  become: true

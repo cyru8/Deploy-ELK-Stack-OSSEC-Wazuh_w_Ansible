@@ -1,0 +1,21 @@
+---
+# handlers file for firewalld
+- name: restart ntpd
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+  become: true
+
+- name: Enable ntpd service.
+  service:
+    name: ntpd
+    enabled: yes
+  become: true
+
+- name: start ntpd
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+  become: true

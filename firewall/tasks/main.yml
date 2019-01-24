@@ -1,0 +1,72 @@
+---
+# tasks file for firewalld
+- name: install the latest version of Firewalld
+  yum:
+    name: firewalld
+    state: latest
+  become: true
+
+- name: install the Policycoreutils-python
+  yum:
+    name: http://mirror.centos.org/centos/7/os/x86_64/Packages/policycoreutils-python-2.5-29.el7.x86_64.rpm
+    state: present
+
+- name: Allow port 22 on firewalld rule for nginx
+  firewalld:
+    port: "{{ nginx_ssh_port }}/tcp"
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Allow port 80 on firewalld rule for nginx
+  firewalld:
+    port: "{{ nginx_http_port }}/tcp"
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Allow port 443 on firewalld rule for nginx
+  firewalld:
+    port: "{{ nginx_https_port }}/tcp"
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Allow port 9200 on firewalld rule for elasticsearch
+  firewalld:
+    port: "{{ elasticsearch_port }}/tcp"
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Allow port 5601 on firewalld rule for kibana
+  firewalld:
+    port: "{{ kibana_port }}/tcp"
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Allow port 1514 on firewalld rule for ossec-wazuh
+  firewalld:
+    port: "{{ wazuh_port }}/tcp"
+    permanent: true
+    state: enabled
+  become: true
+
+- name: Allow port 5044 on firewalld rule for logstash
+  firewalld:
+    port: "{{ logstash_port }}/tcp" 
+    permanent: true  
+    state: enabled 
+  become: true  
+
+# Set SELinux to allow HTTP connections:
+- seport:
+    ports: 80
+    proto: tcp
+    setype: http_port_t
+    state: present
+
+#force all handlers to run  
+- meta: flush_handlers
+
