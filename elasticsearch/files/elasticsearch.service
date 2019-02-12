@@ -38,6 +38,7 @@ LimitNPROC=4096
 LimitAS=infinity
 
 LimitMEMLOCK=infinity
+
 # Specifies the maximum file size
 LimitFSIZE=infinity
 
@@ -59,4 +60,4 @@ SuccessExitStatus=143
 [Install]
 WantedBy=multi-user.target
 
-# Built for packages-6.4.0 (packages)
+# Built for packages-6.6.0 (packages)

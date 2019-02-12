@@ -1,7 +1,11 @@
 ---
 # tasks file for logstash
 #See @ https://github.com/wazuh/wazuh-ansible/blob/master/roles/elastic-stack/ansible-kibana/defaults/main.yml
-#
+- name: logstash.repo to yum.repo 
+  copy:
+    src: kibana.repo
+    dest: /etc/yum.repos.d/kibana.repo
+
 - name: install the Kibana Version 6.5.2 rpm
   yum:
     name: https://artifacts.elastic.co/downloads/kibana/kibana-6.5.2-x86_64.rpm
@@ -18,16 +22,10 @@
     NODE_OPTIONS: "--max-old-space-size=3072"
   args:
     creates: /usr/share/kibana/plugins/wazuh/package.json
-  notify: restart kibana
-
-#- name: Copy techpro.int to /etc/nginx/conf.d/
-#  copy:
-#    src: techpro.int
-#    dest: /etc/nginx/conf.d/
-#  become: true
+#  notify: restart kibana
 
 - name: Copy kibana.yml to /etc/kibana/
-  copy:
+  template:
     src: kibana.yml
     dest: /etc/kibana/
   become: true
@@ -52,20 +50,6 @@
     owner: root
     group: root
     mode: 0644
-
-#- name: Set up basic auth credentials file to access kibana
-#  htpasswd:
-#    create: yes
-#    crypt_scheme: apr_md5_crypt
-#    name: "kibanaadmin"
-#    password: "Password!23"
-#    path: "/etc/nginx/conf.d/kibana.htpasswd"
-#    state: present
-
-#- name: Add the user 'logstash'to the group 'ossec'
-#  user:
-#    name: logstash
-#    group: ossec
 
 # Add a user to (Password!23) file to allow login to wazuh api
 - htpasswd:

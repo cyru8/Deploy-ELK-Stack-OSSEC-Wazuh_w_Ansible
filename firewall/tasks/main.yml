@@ -6,10 +6,10 @@
     state: latest
   become: true
 
-- name: install the Policycoreutils-python
-  yum:
-    name: http://mirror.centos.org/centos/7/os/x86_64/Packages/policycoreutils-python-2.5-29.el7.x86_64.rpm
-    state: present
+#- name: install the Policycoreutils-python
+#  yum:
+#    name: http://mirror.centos.org/centos/7/os/x86_64/Packages/policycoreutils-python-2.5-29.el7.x86_64.rpm
+#    state: present
 
 - name: Allow port 22 on firewalld rule for nginx
   firewalld:

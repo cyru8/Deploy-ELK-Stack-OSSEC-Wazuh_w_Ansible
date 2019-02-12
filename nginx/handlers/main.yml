@@ -7,9 +7,9 @@
     enabled: yes
   become: true
 
-- name: start nginx
-  service: 
-    name: nginx 
-    state: started
-    enabled: yes
-  become: true
+#- name: start nginx
+#  service: 
+#    name: nginx 
+#    state: started
+#    enabled: yes
+#  become: true

@@ -36,11 +36,11 @@
     state: present
   become: true
 
-- name: upgrade all packages, excluding kernel & foo related packages
+- name: upgrade all packages, excluding kernel 
   yum:
     name: '*'
     state: latest
-    exclude: kernel*,foo*
+    exclude: kernel*
 
 - name: Install MySQL Server
   yum: 

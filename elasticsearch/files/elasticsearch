@@ -15,7 +15,7 @@ ES_PATH_CONF=/etc/elasticsearch
 #PID_DIR=/var/run/elasticsearch
 
 # Additional Java OPTS
-#ES_JAVA_OPTS=
+ES_JAVA_OPTS="-Xms4g -Xmx4g"
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
 #RESTART_ON_UPGRADE=true
@@ -25,7 +25,7 @@ ES_PATH_CONF=/etc/elasticsearch
 ################################
 
 # ES_HEAP_SIZE - Set it to half your system RAM memory
-ES_HEAP_SIZE=2g
+ES_HEAP_SIZE=4g
 
 # SysV init.d
 #

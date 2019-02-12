@@ -21,7 +21,7 @@
 - name: Create .my.cnf file with root password credentials
   copy: 
     src: root.cnf.j2 
-    dest: /etc/mysql/my.cnf 
+    dest: /etc/my.cnf.d/my.cnf     ###/etc/my.cnf.d/
     mode: 0600
   become: true
 

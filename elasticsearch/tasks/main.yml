@@ -13,16 +13,16 @@
   become: true
 
 - name: Update elasticsearch.yml in /etc/elasticsearch/elasticsearch.yml
-  copy:
+  template:
     src: elasticsearch.yml
     dest: /etc/elasticsearch/
     mode: 0660
 
-#- name: Update elasticsearch.service in /etc/systemd/system/multi-user.target.wants/
-#  copy:
-#    src: elasticsearch.service
-#    dest: /etc/systemd/system/multi-user.target.wants/
-#    mode: 0777
+- name: Update elasticsearch limits.conf /etc/security/limits.conf
+  copy:
+    src: limits.conf
+    dest: /etc/security/limits.conf
+    mode: 0660
 
 - name: Update elasticsearch in /etc/sysconfig/elasticsearch
   copy:
@@ -62,12 +62,6 @@
     body_format: json
     body: "{{ lookup('template','wazuh-elastic6-template-alerts.json.j2') }}"
     when: wazuh_alerts_template_exits.status != 200
-
-#- name: wazuh-elastic6-template-alerts.json.js" to /etc/logstash/wazuh-elastic6-template.json
-#  copy:
-#    src: wazuh-elastic6-template-alerts.json.j2
-#    dest: /etc/logstash/wazuh-elastic6-template.json
-#    mode: 0644
 
 - name: Enable service elasticsearch
   service:

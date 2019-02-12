@@ -2,6 +2,8 @@
 # vars file for kibana
 elasticsearch_http_port: "9200"
 elasticsearch_network_host: "192.168.2.20"
+elasticsearch.url: "http://192.168.2.20:9200"
+server.host: "192.168.2.20"
 kibana_server_host: "0.0.0.0"
 kibana_server_port: "5601"
 elastic_stack_version: 6.5.2

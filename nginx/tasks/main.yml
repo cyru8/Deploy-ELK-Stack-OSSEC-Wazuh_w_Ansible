@@ -1,7 +1,6 @@
 ---
 # file: tasks/main.yml
 # Top-level installer for Nginx.
-#
 # @see http://wiki.nginx.org/Install
 
 - name: install the latest version of nginx
@@ -34,12 +33,6 @@
   become: true
 
 - name: Enable service nginx
-  service:
-    name: nginx
-    enabled: yes
-  become: true
-
-- name: start nginx
   service:
     name: nginx
     state: started
